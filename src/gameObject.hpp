@@ -1,28 +1,27 @@
-#ifndef GAME_OBJECT_HPP 
+#ifndef GAME_OBJECT_HPP
 #define GAME_OBJECT_HPP
 
 #include <SFML/Graphics.hpp>
 #include <mutex>
 
-class GalagaGame;
+class ClimateGame;
 
-class GameObject
-{
-public:
-	sf::Sprite sprite;
-	GalagaGame *game;
+class GameObject {
+ public:
+  sf::Sprite sprite;
+  ClimateGame *game;
 
-	bool enabled = false;
+  bool enabled = false;
 
-	// Game properties
-	static const int GAME_WIDTH = 1600;
-	static const int GAME_HEIGHT = 1000;
+  // Game properties
+  static const int GAME_WIDTH = 1600;
+  static const int GAME_HEIGHT = 1000;
 
-	GameObject();
-	GameObject(sf::Vector2f position, GalagaGame *game);
+  GameObject();
+  GameObject(sf::Vector2f position, ClimateGame *game);
 
-	virtual void update(sf::Time t);
-	bool isColliding(GameObject* game);
+  virtual void update(sf::Time t);
+  bool isColliding(GameObject *game);
 };
 
-#endif // GAME_OBJECT_HPP
+#endif  // GAME_OBJECT_HPP

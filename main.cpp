@@ -1,16 +1,8 @@
-/**
- *
- * Author: Min Hoo Lee
- * Date: July 9, 2015
- * Name: GALAGA SIMPLE
- *
- */
-
-#include "src/galagaGame.hpp"
+#include "src/climateGame.hpp"
 
 int main()
 {
-	GalagaGame gameInstance;
+	ClimateGame gameInstance;
 	gameInstance.run();
 
 	return 0;

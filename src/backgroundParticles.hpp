@@ -3,17 +3,17 @@
 
 #include <SFML/Graphics.hpp>
 
-class BackgroundParticles
-{
-public:
-	// Game properties
-	static const int GAME_WIDTH = 1600;
-	static const int GAME_HEIGHT = 1000;
+class BackgroundParticles {
+ public:
+  BackgroundParticles(int n);
 
-	sf::CircleShape backgroundParticles[30];
+  void animateParticlesIdle();
+  void animateParticlesMovement();
 
-	void animateParticlesIdle();
-	void animateParticlesMovement();
+  sf::CircleShape backgroundParticles[30];
+
+ private:
+  int num_particles;
 };
 
-#endif // BACKGROUND_PARTICLES_HPP
+#endif  // BACKGROUND_PARTICLES_HPP

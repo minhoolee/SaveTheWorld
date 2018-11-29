@@ -1,32 +1,36 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <string>
+
 #include "gameObject.hpp"
 #include "playerBullet.hpp"
 
-class Player : public GameObject
-{
-public:
-	// Rectangle for taking texture off of main texture
-	sf::IntRect playerTextureRect;
+class Player : public GameObject {
+ public:
+  Player();
+  Player(sf::Vector2f position, ClimateGame* game);
 
-	// Player 1 controls : ARROW KEYS
-	bool isPlayerMovingUp = false;
-	bool isPlayerMovingDown = false;
-	bool isPlayerMovingLeft = false;
-	bool isPlayerMovingRight = false;
-	bool isPlayerFiring = false;
+  void update(sf::Time t);
+  void fire();
 
-	static const int PLAYER_SPEED = 400;
-	static const int BULLET_SPEED = 1500;
+  // Player 1 controls : ARROW KEYS
+  bool isPlayerMovingUp = false;
+  bool isPlayerMovingDown = false;
+  bool isPlayerMovingLeft = false;
+  bool isPlayerMovingRight = false;
+  bool isPlayerFiring = false;
 
-	sf::Clock shotTimer;
+ private:
+  static const int PLAYER_SPEED = 400;
+  static const int BULLET_SPEED = 1500;
+  static const int WIDTH = 50;
+  static const int HEIGHT = 50;
+  static const std::string TEXTURE_FILE;
 
-	Player();
-	Player(sf::Vector2f position, GalagaGame *game);
+  sf::Clock shotTimer;
 
-	void update(sf::Time t);
-	void fire();
+  sf::IntRect playerTextureRect;
 };
 
-#endif // PLAYER_HPP
+#endif  // PLAYER_HPP

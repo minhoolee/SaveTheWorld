@@ -3,19 +3,18 @@
 
 #include "gameObject.hpp"
 
-class EnemyBullet : public GameObject
-{
-public:
-	bool enabled = false;
+class EnemyBullet : public GameObject {
+ public:
+  bool enabled = false;
 
-	sf::Vector2f velocity;
+  sf::Vector2f velocity;
 
-	// Rectangle for taking texture off of main texture
-	sf::IntRect enemyBulletTextureRect;
+  // Rectangle for taking texture off of main texture
+  sf::IntRect enemyBulletTextureRect;
 
-	EnemyBullet();
+  EnemyBullet();
 
-	void update(sf::Time time);
+  void update(sf::Time time);
 };
 
-#endif // ENEMY_BULLET_HPP
+#endif  // ENEMY_BULLET_HPP

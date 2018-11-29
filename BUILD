@@ -10,7 +10,7 @@ cc_binary(
     "-lsfml-system",
     "-lsfml-network",
     "-lsfml-audio",
-    "-lpthread",
+    "-lpthread"
   ],
   data = glob([
     "Textures/*.png",

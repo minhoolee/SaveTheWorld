@@ -1,54 +1,48 @@
 #include "backgroundParticles.hpp"
-#include "galagaGame.hpp"
+#include "climateGame.hpp"
 
-void BackgroundParticles::animateParticlesIdle()
-{
-	for (int particle_num = 0; particle_num < 30; particle_num++)
-	{
-		float random_x = 0.0f;
-		float random_y = 0.0f;
+BackgroundParticles::BackgroundParticles(int n) : num_particles(n) {}
 
-		// Set random positions that are not within a border of 20 from the left/right and 10 from the top/bottom
-		random_x = (float)(rand() % (GAME_WIDTH - 49)) + 20;
-		random_y = (float)(rand() % (GAME_HEIGHT - 49)) + 10;
+void BackgroundParticles::animateParticlesIdle() {
+  for (int i = 0; i < num_particles; ++i) {
+    // Particle has not reached bottom of game yet
+    if (backgroundParticles[i].getPosition().y != 0 &&
+        backgroundParticles[i].getPosition().y < ClimateGame::GAME_HEIGHT) {
+      continue;
+    }
 
-		sf::Vector2f coord(random_x, random_y);
+    float random_x = 0.0f;
+    float random_y = 0.0f;
 
-		backgroundParticles[particle_num].setPosition(coord);
+    // Set random positions that are not within a border of 20 from the
+    // left/right and 10 from the top/bottom
+    random_x = (float)(rand() % (ClimateGame::GAME_WIDTH - 49)) + 20;
+    random_y = (float)(rand() % (ClimateGame::GAME_HEIGHT - 49)) + 10;
 
-		int rand_r = rand() % 257;
-		int rand_g = rand() % 257;
-		int rand_b = rand() % 257;
+    sf::Vector2f coord(random_x, random_y);
 
-		backgroundParticles[particle_num].setFillColor(sf::Color(rand_r, rand_g, rand_b));
+    backgroundParticles[i].setPosition(coord);
 
-		float random_radius = 0.0f;
+    int rand_r = rand() % 256;
+    int rand_g = rand() % 256;
+    int rand_b = rand() % 256;
 
-		// Some particles are bigger than others in order to have foreground and backgrounds
-		random_radius = (rand() % 3) + 1;
+    backgroundParticles[i].setFillColor(sf::Color(rand_r, rand_g, rand_b));
 
-		backgroundParticles[particle_num].setRadius(random_radius);
-	}
+    // Some particles are bigger than others in order to have foreground and
+    // backgrounds
+    float random_radius = (rand() % 3) + 1;
+
+    backgroundParticles[i].setRadius(random_radius);
+  }
 }
 
-void BackgroundParticles::animateParticlesMovement()
-{
-	std::mutex animate_particles_movement_mutex;
-	animate_particles_movement_mutex.lock();
+void BackgroundParticles::animateParticlesMovement() {
+  for (int i = 0; i < num_particles; ++i) {
+    int speed = backgroundParticles[i].getRadius();
 
-	for (int particle_num = 0; particle_num < 30; particle_num++)
-	{
-		int offset = 0;
-		
-		if (backgroundParticles[particle_num].getRadius() == 1)
-			offset = 1;
-		else if (backgroundParticles[particle_num].getRadius() == 2)
-			offset = 2;
-		else if (backgroundParticles[particle_num].getRadius() == 3)
-			offset = 3;
-		
-		backgroundParticles[particle_num].setPosition ( backgroundParticles[particle_num].getPosition().x, backgroundParticles[particle_num].getPosition().y + offset);
-	}
-
-	animate_particles_movement_mutex.unlock();
+    backgroundParticles[i].setPosition(
+        backgroundParticles[i].getPosition().x,
+        backgroundParticles[i].getPosition().y + speed);
+  }
 }

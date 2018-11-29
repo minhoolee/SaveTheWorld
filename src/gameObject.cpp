@@ -2,15 +2,14 @@
 
 GameObject::GameObject() : GameObject::GameObject(sf::Vector2f(0, 0), NULL) {}
 
-GameObject::GameObject(sf::Vector2f position, GalagaGame *game)
-{
-	this->game = game;
-	this->sprite.setPosition(position);
+GameObject::GameObject(sf::Vector2f position, ClimateGame* game) {
+  this->game = game;
+  this->sprite.setPosition(position);
 }
 
 void GameObject::update(sf::Time timeElapsed) {}
 
-bool GameObject::isColliding(GameObject* obj)
-{
-	return (obj->enabled && sprite.getGlobalBounds().intersects(obj->sprite.getGlobalBounds()));
+bool GameObject::isColliding(GameObject* obj) {
+  return (obj->enabled &&
+          sprite.getGlobalBounds().intersects(obj->sprite.getGlobalBounds()));
 }

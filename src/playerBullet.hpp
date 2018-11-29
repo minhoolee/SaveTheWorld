@@ -1,21 +1,20 @@
 #ifndef PLAYER_BULLET_HPP
 #define PLAYER_BULLET_HPP
 
-#include "gameObject.hpp"
 #include "enemy.hpp"
+#include "gameObject.hpp"
 
-class PlayerBullet : public GameObject
-{
-public:
-	bool enabled = false;
-	sf::Vector2f velocity;
-	
-	// Rectangle for taking texture off of main texture
-	sf::IntRect playerBulletTextureRect;
+class PlayerBullet : public GameObject {
+ public:
+  bool enabled = false;
+  sf::Vector2f velocity;
 
-	PlayerBullet();
+  // Rectangle for taking texture off of main texture
+  sf::IntRect playerBulletTextureRect;
 
-	void update(sf::Time time);
+  PlayerBullet();
+
+  void update(sf::Time time);
 };
 
-#endif // PLAYER_BULLET_HPP
+#endif  // PLAYER_BULLET_HPP
