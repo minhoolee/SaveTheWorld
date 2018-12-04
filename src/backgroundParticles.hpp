@@ -2,6 +2,7 @@
 #define BACKGROUND_PARTICLES_HPP
 
 #include <SFML/Graphics.hpp>
+#include <array>
 
 class BackgroundParticles {
  public:

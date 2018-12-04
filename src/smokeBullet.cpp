@@ -4,7 +4,7 @@
 const sf::IntRect SmokeBullet::TEXTURE_RECT = sf::IntRect(73, 99, 40, 29);
 
 SmokeBullet::SmokeBullet(sf::Vector2f pos, ClimateGame* game)
-    : EnemyBullet(pos, game) {
+  : EnemyBullet(pos, game) {
   this->sprite.setTexture(game->mainTexture);
   this->sprite.setTextureRect(this->TEXTURE_RECT);
 

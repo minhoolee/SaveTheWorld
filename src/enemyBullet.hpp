@@ -10,7 +10,7 @@ class EnemyBullet : public GameObject {
   EnemyBullet();
   EnemyBullet(sf::Vector2f pos, ClimateGame* game);
 
-  void update(sf::Time time);
+  void update(sf::Time time) override;
   sf::Vector2f getVelocity();
   void setVelocity(sf::Vector2f v);
 

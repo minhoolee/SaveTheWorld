@@ -18,13 +18,16 @@ PlayerBullet::PlayerBullet() : GameObject() {
 
 sf::IntRect PlayerBullet::getRandomRect() {
   int choice = rand() % 3;
+
   switch (choice) {
     case 0:
       return COMPOST_RECT;
       break;
+
     case 1:
       return DIET_RECT;
       break;
+
     case 2:
       return UNPLUG_RECT;
       break;
@@ -44,7 +47,7 @@ void PlayerBullet::update(sf::Time timeElapsed) {
     enabled = false;
   }
 
-  for (Enemy &e : game->enemies) {
+  for (Enemy& e : game->enemies) {
     if (isColliding(&e)) {
       enabled = false;
       this->disable();

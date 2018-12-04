@@ -1,8 +1,8 @@
 #include "climateGame.hpp"
 
 ClimateGame::ClimateGame()
-    : window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Climate 2.0"),
-      particle(BackgroundParticles(30)) {
+  : window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Climate 2.0"),
+    particle(BackgroundParticles(30)) {
   window.setFramerateLimit(60);
 
   backgroundTexture.loadFromFile("Textures/black_background.png");
@@ -77,14 +77,15 @@ void ClimateGame::update(sf::Time time) {
     player.update(time);
   }
 
-  for (PlayerBullet &b : this->playerBullets) {
+  for (PlayerBullet& b : this->playerBullets) {
     if (b.isEnabled()) {
       b.update(time);
     }
   }
 
   enemiesLeft = 0;
-  for (Enemy &e : enemies) {
+
+  for (Enemy& e : enemies) {
     if (e.isEnabled()) {
       e.update(time);
       enemiesLeft++;
@@ -152,18 +153,23 @@ void ClimateGame::processEvents() {
       if (event.key.code == sf::Keyboard::Up) {
         player.isPlayerMovingUp = true;
       }
+
       if (event.key.code == sf::Keyboard::Down) {
         player.isPlayerMovingDown = true;
       }
+
       if (event.key.code == sf::Keyboard::Left) {
         player.isPlayerMovingLeft = true;
       }
+
       if (event.key.code == sf::Keyboard::Right) {
         player.isPlayerMovingRight = true;
       }
+
       if (event.key.code == sf::Keyboard::Space) {
         player.isPlayerFiring = true;
       }
+
       // Press 'Q' to quit
       if (event.key.code == sf::Keyboard::Q) {
         window.close();
@@ -174,15 +180,19 @@ void ClimateGame::processEvents() {
       if (event.key.code == sf::Keyboard::Up) {
         player.isPlayerMovingUp = false;
       }
+
       if (event.key.code == sf::Keyboard::Down) {
         player.isPlayerMovingDown = false;
       }
+
       if (event.key.code == sf::Keyboard::Left) {
         player.isPlayerMovingLeft = false;
       }
+
       if (event.key.code == sf::Keyboard::Right) {
         player.isPlayerMovingRight = false;
       }
+
       if (event.key.code == sf::Keyboard::Space) {
         player.isPlayerFiring = false;
       }
@@ -194,28 +204,31 @@ void ClimateGame::render() {
   window.clear();
   window.draw(backgroundSprite);
 
-  if (player.isEnabled()) window.draw(player.sprite);
+  if (player.isEnabled()) {
+    window.draw(player.sprite);
 
-  for (PlayerBullet &b : playerBullets) {
-    if (b.isEnabled()) {
-      window.draw(b.sprite);
+    for (PlayerBullet& b : playerBullets) {
+      if (b.isEnabled()) {
+        window.draw(b.sprite);
+      }
     }
-  }
 
-  // Draw all enemies and their bullets if shooting
-  for (Enemy &e : enemies) {
-    if (e.isEnabled()) {
-      window.draw(e.sprite);
-      for (EnemyBullet &b : e.bullets) {
-        if (b.isEnabled()) {
-          window.draw(b.sprite);
+    // Draw all enemies and their bullets if shooting
+    for (Enemy& e : enemies) {
+      if (e.isEnabled()) {
+        window.draw(e.sprite);
+
+        for (EnemyBullet& b : e.bullets) {
+          if (b.isEnabled()) {
+            window.draw(b.sprite);
+          }
         }
       }
     }
   }
 
   // Draw all background particles
-  for (sf::CircleShape &p : particle.backgroundParticles) {
+  for (sf::CircleShape& p : particle.backgroundParticles) {
     window.draw(p);
   }
 
@@ -230,6 +243,7 @@ void ClimateGame::spawnEnemies() {
   int START_POS = 300;
   int spacing =
       (double)(ClimateGame::SCREEN_WIDTH - 2 * START_POS) / (enemies.size() / 2 - 1);
+
   for (int i = 0; i < enemies.size() / 2; ++i) {
     enemies[i] = Hurricane(sf::Vector2f(START_POS + (i * spacing), -150), this);
     enemies[i].enable();
@@ -239,8 +253,8 @@ void ClimateGame::spawnEnemies() {
   // Second half (forest fires)
   for (int i = enemies.size() / 2; i < enemies.size(); ++i) {
     enemies[i] = ForestFire(
-        sf::Vector2f(START_POS + ((i - enemies.size() / 2) * spacing), -100),
-        this);
+                     sf::Vector2f(START_POS + ((i - enemies.size() / 2) * spacing), -100),
+                     this);
     enemies[i].enable();
     enemiesLeft++;
   }

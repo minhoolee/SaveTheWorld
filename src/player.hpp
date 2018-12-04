@@ -11,7 +11,7 @@ class Player : public GameObject {
   Player();
   Player(sf::Vector2f position, ClimateGame* game);
 
-  void update(sf::Time t);
+  void update(sf::Time t) override;
   void fire();
 
   // Player 1 controls : ARROW KEYS

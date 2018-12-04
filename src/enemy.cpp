@@ -6,8 +6,8 @@ const sf::IntRect Enemy::TEXTURE_RECT = sf::IntRect(0, 0, 0, 0);
 
 Enemy::Enemy() : GameObject() {}
 
-Enemy::Enemy(sf::Vector2f position, ClimateGame *game)
-    : GameObject(position, game) {
+Enemy::Enemy(sf::Vector2f position, ClimateGame* game)
+  : GameObject(position, game) {
   this->sprite.setTexture(game->mainTexture);
   this->sprite.setTextureRect(this->TEXTURE_RECT);
 
@@ -24,7 +24,7 @@ Enemy::Enemy(sf::Vector2f position, ClimateGame *game)
 }
 
 void Enemy::update(sf::Time timeElapsed) {
-  for (EnemyBullet &b : this->bullets) {
+  for (EnemyBullet& b : this->bullets) {
     if (b.isEnabled()) {
       b.update(timeElapsed);
     }
@@ -41,21 +41,23 @@ void Enemy::update(sf::Time timeElapsed) {
   }
 
   // First 5 seconds idly move and then attack
-  if (moveTimer.getElapsedTime().asSeconds() < 2.5f) {
+  if (moveTimer.getElapsedTime().asSeconds() < 3.0f) {
     velocity.y = 100;
     sprite.move(velocity * timeElapsed.asSeconds());
-  } else if (moveTimer.getElapsedTime().asSeconds() < 5.0f) {
+  } else if (moveTimer.getElapsedTime().asSeconds() < 7.0f) {
     // Execute idle movement pattern
     if (idleMovementTimer.getElapsedTime().asSeconds() > 0.7f) {
       idleMovementTimer.restart();
       isEnemyMovingRight = !isEnemyMovingRight;
     }
 
-    if (isEnemyMovingRight)
+    if (isEnemyMovingRight) {
       velocity.x = ENEMY_SPEED / 2;
+    }
 
-    else if (!isEnemyMovingRight)
+    else if (!isEnemyMovingRight) {
       velocity.x = -ENEMY_SPEED / 2;
+    }
 
     sprite.move(velocity * timeElapsed.asSeconds());
   } else {
@@ -199,7 +201,7 @@ void Enemy::update(sf::Time timeElapsed) {
 }
 
 // FAILED ATTEMPT TO MOVE THEM INTO A GRID FORMATION
-void Enemy::moveToFormation(sf::Time &timeElapsed) {
+void Enemy::moveToFormation(sf::Time& timeElapsed) {
   sf::Clock movementTimer;
 
   for (int i = 0; i < 20; i++) {
@@ -237,7 +239,7 @@ void Enemy::idleAnimation() {
   // }
 }
 
-void Enemy::attackPlayer(sf::Time &timeElapsed) {
+void Enemy::attackPlayer(sf::Time& timeElapsed) {
   sf::Vector2f velocity(0, 0);
   double degrees = 0;
 
@@ -248,11 +250,11 @@ void Enemy::attackPlayer(sf::Time &timeElapsed) {
   // Rotate sprite so that it faces downwards (255 <= degrees <= 285; 30 degree
   // arc) degrees = rand() % 31 + 255; sprite.setRotation(degrees);
 
-  float enemy_x = rand() % (ENEMY_SPEED)-ENEMY_SPEED / 2;
+  float enemy_x = rand() % (ENEMY_SPEED) - ENEMY_SPEED / 2;
   float enemy_y =
       sqrt(pow(ENEMY_SPEED, 2) -
            pow(enemy_x, 2));  // Use pythagorean theorem to calculate the y
-                              // distance the enmey must travel
+  // distance the enmey must travel
 
   // velocity.x = enemy_x;
   velocity.y = ENEMY_SPEED;
@@ -273,11 +275,13 @@ void Enemy::attackPlayer(sf::Time &timeElapsed) {
   }
 }
 
-void Enemy::moveSequence(sf::Time timeElapsed, sf::Vector2f &velocity,
+void Enemy::moveSequence(sf::Time timeElapsed, sf::Vector2f& velocity,
                          int point_num, int select_mode, int point_total,
                          double degrees_total) {
   // Range of theta (degrees) is 0 <= theta < 360
-  if (theta >= 360) theta = theta - 360;
+  if (theta >= 360) {
+    theta = theta - 360;
+  }
 
   sprite.setRotation(theta + 270);
 
@@ -307,7 +311,7 @@ void Enemy::moveSequence(sf::Time timeElapsed, sf::Vector2f &velocity,
 
   this->theta += (degrees_total /
                   point_total);  // Increment by number of degrees necessary to
-                                 // create a total number of degrees
+  // create a total number of degrees
 }
 
 void Enemy::fire() {
@@ -315,7 +319,7 @@ void Enemy::fire() {
   // Fire a random number (up until a maximum) of bullets at random positions
   // for (int bullet_num = 0; bullet_num < rand() % this->bullets.size();
   //      ++bullet_num) {
-  EnemyBullet *bullet = &(this->bullets[curr_bullet]);
+  EnemyBullet* bullet = &(this->bullets[curr_bullet]);
 
   bullet->sprite.setPosition(
       sf::Vector2f((this->sprite.getPosition().x),
@@ -325,12 +329,12 @@ void Enemy::fire() {
   float enemy_x =
       fmod(rand(),
            (this->getBulletSpeed() / 6.0) -
-               ((this->getBulletSpeed() / 6.0 * 2) +
-                1));  // Bullets can fly in any direction of a certain range
+           ((this->getBulletSpeed() / 6.0 * 2) +
+            1));  // Bullets can fly in any direction of a certain range
   float enemy_y =
       sqrt(pow(this->getBulletSpeed(), 2) -
            pow(enemy_x, 2));  // Use pythagorean theorem to calculate the y
-                              // distance the bullet must travel
+  // distance the bullet must travel
 
   bullet->setVelocity(sf::Vector2f(enemy_x, enemy_y));
 
@@ -350,4 +354,6 @@ void Enemy::disable() {
   this->point_num = 0;
 }
 
-int Enemy::getBulletSpeed() { return this->BULLET_SPEED; }
+int Enemy::getBulletSpeed() {
+  return this->BULLET_SPEED;
+}

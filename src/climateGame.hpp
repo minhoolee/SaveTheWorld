@@ -6,6 +6,7 @@
 #include <SFML/System/String.hpp>
 #include <iostream>
 #include <thread>
+#include <array>
 
 #include "backgroundParticles.hpp"
 #include "enemy.hpp"

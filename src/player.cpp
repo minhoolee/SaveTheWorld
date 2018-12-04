@@ -4,7 +4,7 @@
 Player::Player() : GameObject() {}
 
 Player::Player(sf::Vector2f position, ClimateGame* game)
-    : GameObject(position, game) {
+  : GameObject(position, game) {
   enabled = true;
 
   this->sprite.setTexture(game->mainTexture);
