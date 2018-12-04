@@ -1,32 +1,25 @@
 #include "player.hpp"
 #include "climateGame.hpp"
 
-const std::string Player::TEXTURE_FILE = "Textures/earth.jpg";
-
 Player::Player() : GameObject() {}
 
 Player::Player(sf::Vector2f position, ClimateGame* game)
-  : GameObject(position, game) {
+    : GameObject(position, game) {
   enabled = true;
 
   this->sprite.setTexture(game->mainTexture);
-  this->playerTextureRect = sf::IntRect(15, 52, 20, 20);
+  this->playerTextureRect = sf::IntRect(21, 13, 48, 50);
   this->sprite.setTextureRect(playerTextureRect);
 
-  this->sprite.setScale((double)this->WIDTH / this->playerTextureRect.width,
-                        (double)this->HEIGHT / this->playerTextureRect.height);
+  // Adjust height and width (retaining proportion) to defined measurements
+  double prop =
+      (double)this->playerTextureRect.height / this->playerTextureRect.width;
+  this->sprite.setScale(
+      (double)this->SIZE / this->playerTextureRect.width,
+      (double)this->SIZE * prop / this->playerTextureRect.height);
   this->sprite.setOrigin((double)this->playerTextureRect.width / 2,
-                         (double)this->playerTextureRect.height / 2);
+                         (double)this->playerTextureRect.height * prop / 2);
 }
-/*  */
-/* Player::Player(const Player& obj) { */
-/*   this->texture.loadFromImage(obj.texture.copyToImage()); */
-/* } */
-/*  */
-/* Player& Player::operator=(const Player& obj) { */
-/*   this->texture.loadFromImage(obj.texture.copyToImage()); */
-/*   return *this; */
-/* } */
 
 void Player::update(sf::Time timeElapsed) {
   // Image starts pointed left, so rotate it 90 degrees clockwise
@@ -75,27 +68,14 @@ void Player::update(sf::Time timeElapsed) {
 void Player::fire() {
   game->playerBullets[game->currentBullet].sprite.setPosition(
       sf::Vector2f(sprite.getPosition().x, sprite.getPosition().y - 32 - 20));
-  game->playerBullets[game->currentBullet].enabled = true;
-  game->playerBullets[game->currentBullet].velocity =
-      sf::Vector2f(0, BULLET_SPEED);
+  game->playerBullets[game->currentBullet].enable();
+  game->playerBullets[game->currentBullet].setVelocity(
+      sf::Vector2f(0, BULLET_SPEED));
 
   // If bullet not set, set a couple values on it
   if (game->playerBullets[game->currentBullet].game == NULL) {
     game->playerBullets[game->currentBullet].game = game;
-    /* game->playerBullets[game->currentBullet].sprite.setTexture( */
-    /*     game->mainTexture);  // 0th index because all bullet textures are same */
   }
 
-  // Check if game is multiplayer and if the bullet was shot by player2 (hack
-  // method)
-  // if ( (game->MULTI_PLAYER) && (sprite.getPosition() ==
-  // game->player2.sprite.getPosition()) )
-  // game->playerBullets[game->currentBullet].sprite.setColor(sf::Color(255,
-  // 255, 150));
-
-  game->currentBullet++;
-
-  if (game->currentBullet == 50) {
-    game->currentBullet = 0;
-  }
+  game->currentBullet = (game->currentBullet + 1) % 50;
 }

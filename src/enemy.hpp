@@ -9,19 +9,38 @@
 
 class Enemy : public GameObject {
  public:
+  Enemy();
+  Enemy(sf::Vector2f position, ClimateGame *game);
+
+  std::array<EnemyBullet, 10> bullets;
+
+  void update(sf::Time t);
+  void idleAnimation();
+  void attackPlayer(sf::Time &timeElapsed);
+  void moveToFormation(sf::Time &timeElapsed);
+  // void moveSequence(sf::ConvexShape &shape, sf::Time &timeElapsed,
+  // sf::Vector2f &velocity, int point_num, int select_mode, int point_total,
+  // double degrees_total);
+  void moveSequence(sf::Time timeElapsed, sf::Vector2f &velocity, int point_num,
+                    int select_mode, int point_total, double degrees_total);
+  void fire();
+  void disable() override;
+  virtual int getBulletSpeed();
+
+ private:
+  // Rectangle for taking textures off of main texture
+  static const sf::IntRect TEXTURE_RECT;
+
+  static const int SIZE = 75;
+
   sf::Clock fireTimer;
   sf::Clock idleMovementTimer;
   sf::Clock idleAnimateTimer;
   sf::Clock moveTimer;
 
-  // Rectangles for taking textures off of main texture
-  sf::IntRect enemyTextureRect;
-  sf::IntRect enemyTextureRect2;
-
   // Game properties
-  static const int ENEMY_SPEED = 700;
-  static const int BULLET_SPEED = 1200;
-  static const int MAX_NUM_BULLETS = 10;
+  static const int ENEMY_SPEED = 500;
+  static const int BULLET_SPEED = 800;
 
   // Circlular movements for enemies
   sf::ConvexShape shape1;
@@ -29,6 +48,8 @@ class Enemy : public GameObject {
   sf::ConvexShape shape3;
   sf::ConvexShape shape4;
   sf::CircleShape circle;
+
+  int curr_bullet = 0;
 
   int order = 0;  // Sprite moves in a sequence (ellipse -> circle -> ellipse)
 
@@ -61,20 +82,6 @@ class Enemy : public GameObject {
   bool hasWingsOpen = true;
   bool hasFired = false;
   bool isEnemyMovingRight = true;
-
-  Enemy();
-  Enemy(sf::Vector2f position, ClimateGame *game);
-
-  void update(sf::Time t);
-  void idleAnimation();
-  void attackPlayer(sf::Time &timeElapsed);
-  void moveToFormation(sf::Time &timeElapsed);
-  // void moveSequence(sf::ConvexShape &shape, sf::Time &timeElapsed,
-  // sf::Vector2f &velocity, int point_num, int select_mode, int point_total,
-  // double degrees_total);
-  void moveSequence(sf::Time timeElapsed, sf::Vector2f &velocity, int point_num,
-                    int select_mode, int point_total, double degrees_total);
-  void fire();
 };
 
 #endif  // ENEMY_HPP

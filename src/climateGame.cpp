@@ -1,7 +1,7 @@
 #include "climateGame.hpp"
 
 ClimateGame::ClimateGame()
-    : window(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Climate 2.0"),
+    : window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Climate 2.0"),
       particle(BackgroundParticles(30)) {
   window.setFramerateLimit(60);
 
@@ -12,7 +12,8 @@ ClimateGame::ClimateGame()
   // Main texture to pull others off of
   mainTexture.loadFromFile("Textures/mainTexture.png");
 
-  player = Player(sf::Vector2f((GAME_WIDTH / 2), (GAME_HEIGHT * 7 / 8)), this);
+  player =
+      Player(sf::Vector2f((SCREEN_WIDTH / 2), (SCREEN_HEIGHT * 7 / 8)), this);
 
   font.loadFromFile("Fonts/galaga_fonts.ttf");
 
@@ -22,7 +23,7 @@ ClimateGame::ClimateGame()
   playerScoreText.setCharacterSize(24);
 
   // Show help text
-  helpText.setPosition(sf::Vector2f(GAME_WIDTH / 2.0f, 60));
+  helpText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 60));
   helpText.setFont(font);
   helpText.setFillColor(sf::Color::White);
   helpText.setString(
@@ -53,7 +54,7 @@ void ClimateGame::run() {
   sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
   // Start some game elements on startup
-  spawnEnemies(MAX_NUM_ENEMIES);
+  spawnEnemies();
 
   particle.animateParticlesIdle();
 
@@ -72,25 +73,19 @@ void ClimateGame::update(sf::Time time) {
   // float time_f = time.asSeconds();
   // void *thread_arg = &time_f;
 
-  if (player.enabled) {
+  if (player.isEnabled()) {
     player.update(time);
   }
 
   for (PlayerBullet &b : this->playerBullets) {
-    if (b.enabled) {
-      b.update(time);
-    }
-  }
-
-  for (EnemyBullet &b : enemyBullets) {
-    if (b.enabled) {
+    if (b.isEnabled()) {
       b.update(time);
     }
   }
 
   enemiesLeft = 0;
   for (Enemy &e : enemies) {
-    if (e.enabled) {
+    if (e.isEnabled()) {
       e.update(time);
       enemiesLeft++;
     }
@@ -98,38 +93,41 @@ void ClimateGame::update(sf::Time time) {
 
   if (enemiesLeft == 0) {
     enemyNum = 0;
-    spawnEnemies(MAX_NUM_ENEMIES);
+    spawnEnemies();
   }
 
-  if (enemySpawnTimer.getElapsedTime().asSeconds() > 0.05f) {
-    if (enemyNum < enemiesLeft) {
-      if (enemyNum < (enemiesLeft / 2)) {
-        enemies[enemyNum] =
-            Enemy(sf::Vector2f(GAME_WIDTH + 100, (GAME_HEIGHT / 2)), this);
-        enemies[enemyNum].destination_x +=
-            (100.0f * enemyNum);  // Set the enemies in a grid like formation
-        enemies[enemyNum].enabled = true;
-        enemies[enemyNum].update(time);
-        enemyNum++;
-      }
-    }
-  }
-
-  if (enemySpawnTimer.getElapsedTime().asSeconds() > 0.1f) {
-    enemySpawnTimer.restart();
-
-    if (enemyNum < enemiesLeft) {
-      if (enemyNum >= (enemiesLeft / 2)) {
-        enemies[enemyNum] = Enemy(
-            sf::Vector2f(GAME_WIDTH + 100, (GAME_HEIGHT / 2) + 100), this);
-        enemies[enemyNum].destination_x +=
-            (100.0f * (enemyNum - (enemiesLeft / 2)));  // Next row of enemies
-        enemies[enemyNum].enabled = true;
-        enemies[enemyNum].update(time);
-        enemyNum++;
-      }
-    }
-  }
+  // if (enemySpawnTimer.getElapsedTime().asSeconds() > 0.05f) {
+  //   if (enemyNum < enemiesLeft) {
+  //     if (enemyNum < (enemiesLeft / 2)) {
+  //       enemies[enemyNum] =
+  //           Enemy(sf::Vector2f(SCREEN_WIDTH + 100, (SCREEN_HEIGHT / 2)),
+  //           this);
+  //       enemies[enemyNum].destination_x +=
+  //           (100.0f * enemyNum);  // Set the enemies in a grid like formation
+  //       enemies[enemyNum].enable();
+  //       enemies[enemyNum].update(time);
+  //       enemyNum++;
+  //     }
+  //   }
+  // }
+  //
+  // if (enemySpawnTimer.getElapsedTime().asSeconds() > 0.1f) {
+  //   enemySpawnTimer.restart();
+  //
+  //   if (enemyNum < enemiesLeft) {
+  //     if (enemyNum >= (enemiesLeft / 2)) {
+  //       enemies[enemyNum] = Enemy(
+  //           sf::Vector2f(SCREEN_WIDTH + 100, (SCREEN_HEIGHT / 2) + 100),
+  //           this);
+  //       enemies[enemyNum].destination_x +=
+  //           (100.0f * (enemyNum - (enemiesLeft / 2)));  // Next row of
+  //           enemies
+  //       enemies[enemyNum].enable();
+  //       enemies[enemyNum].update(time);
+  //       enemyNum++;
+  //     }
+  //   }
+  // }
 
   if (animateParticlesTimer.getElapsedTime().asSeconds() > 3.0f) {
     animateParticlesTimer.restart();
@@ -196,34 +194,29 @@ void ClimateGame::render() {
   window.clear();
   window.draw(backgroundSprite);
 
-  /* if (player.enabled) window.draw(player.sprite); */
-  window.draw(player.sprite);
+  if (player.isEnabled()) window.draw(player.sprite);
 
   for (PlayerBullet &b : playerBullets) {
-    if (b.enabled) {
+    if (b.isEnabled()) {
       window.draw(b.sprite);
     }
   }
 
-  // Draw all bullets for existing enemies
-  for (int i = 0; i < MAX_NUM_ENEMIES; i++) {
-    for (EnemyBullet &b : enemyBullets) {
-      if (b.enabled) {
-        window.draw(b.sprite);
+  // Draw all enemies and their bullets if shooting
+  for (Enemy &e : enemies) {
+    if (e.isEnabled()) {
+      window.draw(e.sprite);
+      for (EnemyBullet &b : e.bullets) {
+        if (b.isEnabled()) {
+          window.draw(b.sprite);
+        }
       }
     }
   }
 
-  // Draw all enemies
-  for (Enemy &e : enemies) {
-    if (e.enabled) {
-      window.draw(e.sprite);
-    }
-  }
-
   // Draw all background particles
-  for (int i = 0; i < 30; i++) {
-    window.draw(particle.backgroundParticles[i]);
+  for (sf::CircleShape &p : particle.backgroundParticles) {
+    window.draw(p);
   }
 
   window.draw(playerScoreText);
@@ -232,23 +225,30 @@ void ClimateGame::render() {
   window.display();
 }
 
-void ClimateGame::spawnEnemies(int count) {
-  for (int enemyNum = 0; enemyNum < count; enemyNum++) {
-    // First half
-    if (enemyNum < (count / 2)) {
-      enemies[enemyNum] =
-          Enemy(sf::Vector2f(GAME_WIDTH + 100, (GAME_HEIGHT / 2)), this);
-      enemies[enemyNum].enabled = true;
-      enemiesLeft++;
-    }
+void ClimateGame::spawnEnemies() {
+  // First half (hurricanes)
+  int START_POS = 300;
+  int spacing =
+      (double)(ClimateGame::SCREEN_WIDTH - 2 * START_POS) / (enemies.size() / 2 - 1);
+  for (int i = 0; i < enemies.size() / 2; ++i) {
+    enemies[i] = Hurricane(sf::Vector2f(START_POS + (i * spacing), -150), this);
+    enemies[i].enable();
+    enemiesLeft++;
   }
 
-  for (int enemyNum = 0; enemyNum < count; enemyNum++) {
-    if (enemyNum >= (count / 2)) {
-      enemies[enemyNum] =
-          Enemy(sf::Vector2f(GAME_WIDTH + 100, (GAME_HEIGHT / 2) + 100), this);
-      enemies[enemyNum].enabled = true;
-      enemiesLeft++;
-    }
+  // Second half (forest fires)
+  for (int i = enemies.size() / 2; i < enemies.size(); ++i) {
+    enemies[i] = ForestFire(
+        sf::Vector2f(START_POS + ((i - enemies.size() / 2) * spacing), -100),
+        this);
+    enemies[i].enable();
+    enemiesLeft++;
   }
+}
+
+bool ClimateGame::isInBlastZone(sf::Vector2f pos) {
+  return pos.x < -ClimateGame::BLAST_ZONE ||
+         pos.x > ClimateGame::SCREEN_WIDTH + ClimateGame::BLAST_ZONE ||
+         pos.y < -ClimateGame::BLAST_ZONE ||
+         pos.y > ClimateGame::SCREEN_HEIGHT + ClimateGame::BLAST_ZONE;
 }

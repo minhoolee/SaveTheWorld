@@ -13,3 +13,9 @@ bool GameObject::isColliding(GameObject* obj) {
   return (obj->enabled &&
           sprite.getGlobalBounds().intersects(obj->sprite.getGlobalBounds()));
 }
+
+void GameObject::enable() { this->enabled = true; }
+
+void GameObject::disable() { this->enabled = false; }
+
+bool GameObject::isEnabled() { return this->enabled; }

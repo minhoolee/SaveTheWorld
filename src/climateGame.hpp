@@ -4,12 +4,17 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/String.hpp>
+#include <iostream>
 #include <thread>
 
 #include "backgroundParticles.hpp"
 #include "enemy.hpp"
+#include "forestFireEnemy.hpp"
 #include "gameObject.hpp"
+#include "hurricaneEnemy.hpp"
 #include "player.hpp"
+#include "smokeBullet.hpp"
+#include "waterBullet.hpp"
 
 class ClimateGame;
 
@@ -22,40 +27,23 @@ class ClimateGame {
   sf::Clock enemySpawnTimer;
 
   // Game window properties
-  static const int GAME_WIDTH = 1600;
-  static const int GAME_HEIGHT = 1000;
-  static const int NUM_THREADS = 5;
-  const int MAX_NUM_ENEMIES = 50;
+  static const int SCREEN_WIDTH = 1600;
+  static const int SCREEN_HEIGHT = 1000;
 
   int enemyNum = 0;
   int enemiesLeft = 0;
+  std::array<Enemy, 10> enemies;
 
   Player player;
-  Enemy enemies[100];
+  int currentBullet = 0;
+  std::array<PlayerBullet, 50> playerBullets;
 
   BackgroundParticles particle;
-
-  int currentBullet = 0;
-  PlayerBullet playerBullets[50];
-
-  int currentEnemyBullet = 0;
-  EnemyBullet enemyBullets[50];
-
-  // Background texture
-  sf::Sprite backgroundSprite;
-  sf::Texture backgroundTexture;
-
-  // sf::CircleShape backgroundParticles[30];
 
   // Main texture to pull other textures off of
   sf::Texture mainTexture;
 
-  sf::Font font;
-
   sf::Text playerScoreText;
-  sf::Text helpText;
-  sf::Text titleText;
-
   unsigned long long int playerScore = 0;
 
   ClimateGame();
@@ -65,7 +53,21 @@ class ClimateGame {
   void processEvents();
   void render();
 
-  void spawnEnemies(int count);
+  void spawnEnemies();
+  static bool isInBlastZone(sf::Vector2f pos);
+
+ private:
+  // Blast zone (invisible border) of constant width around screen
+  static const int BLAST_ZONE = 200;
+
+  sf::Font font;
+
+  sf::Text helpText;
+  sf::Text titleText;
+
+  // Background texture
+  sf::Sprite backgroundSprite;
+  sf::Texture backgroundTexture;
 };
 
 #endif  // CLIMATE_GAME_HPP

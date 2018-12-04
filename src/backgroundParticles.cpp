@@ -7,7 +7,7 @@ void BackgroundParticles::animateParticlesIdle() {
   for (int i = 0; i < num_particles; ++i) {
     // Particle has not reached bottom of game yet
     if (backgroundParticles[i].getPosition().y != 0 &&
-        backgroundParticles[i].getPosition().y < ClimateGame::GAME_HEIGHT) {
+        backgroundParticles[i].getPosition().y < ClimateGame::SCREEN_HEIGHT) {
       continue;
     }
 
@@ -16,8 +16,8 @@ void BackgroundParticles::animateParticlesIdle() {
 
     // Set random positions that are not within a border of 20 from the
     // left/right and 10 from the top/bottom
-    random_x = (float)(rand() % (ClimateGame::GAME_WIDTH - 49)) + 20;
-    random_y = (float)(rand() % (ClimateGame::GAME_HEIGHT - 49)) + 10;
+    random_x = (float)(rand() % (ClimateGame::SCREEN_WIDTH - 49)) + 20;
+    random_y = (float)(rand() % (ClimateGame::SCREEN_HEIGHT - 49)) + 10;
 
     sf::Vector2f coord(random_x, random_y);
 

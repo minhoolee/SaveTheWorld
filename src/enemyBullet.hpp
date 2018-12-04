@@ -7,14 +7,20 @@ class EnemyBullet : public GameObject {
  public:
   bool enabled = false;
 
-  sf::Vector2f velocity;
-
-  // Rectangle for taking texture off of main texture
-  sf::IntRect enemyBulletTextureRect;
-
   EnemyBullet();
+  EnemyBullet(sf::Vector2f pos, ClimateGame* game);
 
   void update(sf::Time time);
+  sf::Vector2f getVelocity();
+  void setVelocity(sf::Vector2f v);
+
+ private:
+  // Rectangle for taking texture off of main texture
+  static const sf::IntRect TEXTURE_RECT;
+
+  static const int SIZE = 25;
+
+  sf::Vector2f velocity;
 };
 
 #endif  // ENEMY_BULLET_HPP

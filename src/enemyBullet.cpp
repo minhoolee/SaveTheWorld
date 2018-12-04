@@ -1,23 +1,31 @@
 #include "enemyBullet.hpp"
 #include "climateGame.hpp"
 
-EnemyBullet::EnemyBullet() : GameObject() {
-  /* enemyBulletTextureRect = sf::IntRect(364, 216, 5, 10); */
-  /* sprite.setTextureRect(enemyBulletTextureRect); */
-  sprite.setOrigin(2.5, 4);
-  sprite.setScale(3, 3);
-}
+EnemyBullet::EnemyBullet() : GameObject() {}
+
+EnemyBullet::EnemyBullet(sf::Vector2f pos, ClimateGame* game)
+    : GameObject(pos, game) {}
 
 void EnemyBullet::update(sf::Time timeElapsed) {
-  sprite.move(velocity * timeElapsed.asSeconds());
+  // std::cout << velocity.x << " " << velocity.y << std::endl;
+  this->sprite.move(this->velocity * timeElapsed.asSeconds());
 
-  if (sprite.getPosition().y > GAME_HEIGHT) {
-    enabled = false;
+  if (ClimateGame::isInBlastZone(this->sprite.getPosition())) {
+    this->disable();
   }
 
-  if (game->player.enabled && isColliding(&game->player)) {
-    // enabled = false;
-    // game->player.enabled = false;
-    game->player.sprite.setPosition((GAME_WIDTH / 2), ((GAME_HEIGHT * 7) / 8));
+  if (game->player.isEnabled() && this->isColliding(&game->player)) {
+    this->disable();
+    game->player.disable();
+    // game->player.sprite.setPosition((ClimateGame::SCREEN_WIDTH / 2),
+    //                                 ((ClimateGame::SCREEN_HEIGHT * 7) / 8));
   }
+}
+
+sf::Vector2f EnemyBullet::getVelocity() {
+  return this->velocity;
+}
+
+void EnemyBullet::setVelocity(sf::Vector2f v) {
+  this->velocity = v;
 }

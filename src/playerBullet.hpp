@@ -7,14 +7,22 @@
 class PlayerBullet : public GameObject {
  public:
   bool enabled = false;
-  sf::Vector2f velocity;
-
-  // Rectangle for taking texture off of main texture
-  sf::IntRect playerBulletTextureRect;
 
   PlayerBullet();
 
   void update(sf::Time time);
+  void setVelocity(sf::Vector2f velocity);
+
+ private:
+  sf::Vector2f velocity;
+
+  static const int SIZE = 20;
+
+  // Rectangles for taking texture off of main texture
+  static const sf::IntRect COMPOST_RECT, DIET_RECT, UNPLUG_RECT;
+
+  // Returns a random pre-defined rectangle for the bullet texture
+  sf::IntRect getRandomRect();
 };
 
 #endif  // PLAYER_BULLET_HPP

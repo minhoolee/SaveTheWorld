@@ -23,10 +23,8 @@ class Player : public GameObject {
 
  private:
   static const int PLAYER_SPEED = 400;
-  static const int BULLET_SPEED = 1500;
-  static const int WIDTH = 50;
-  static const int HEIGHT = 50;
-  static const std::string TEXTURE_FILE;
+  static const int BULLET_SPEED = 1000;
+  static const int SIZE = 75;
 
   sf::Clock shotTimer;
 
