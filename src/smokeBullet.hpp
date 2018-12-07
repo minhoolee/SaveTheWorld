@@ -10,7 +10,7 @@ class SmokeBullet : public EnemyBullet {
 
   sf::Vector2f velocity;
 
-  SmokeBullet(sf::Vector2f pos, ClimateGame* game);
+  SmokeBullet(const sf::Vector2f& pos, ClimateGame* game);
 
  private:
   // Rectangle for taking texture off of main texture

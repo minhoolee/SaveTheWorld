@@ -37,7 +37,7 @@ sf::IntRect PlayerBullet::getRandomRect() {
   return COMPOST_RECT;
 }
 
-void PlayerBullet::update(sf::Time timeElapsed) {
+void PlayerBullet::update(const sf::Time& timeElapsed) {
   this->sprite.setTexture(game->mainTexture);
 
   // Make sprite move upwards (negative)
@@ -60,6 +60,6 @@ void PlayerBullet::update(sf::Time timeElapsed) {
   }
 }
 
-void PlayerBullet::setVelocity(sf::Vector2f velocity) {
+void PlayerBullet::setVelocity(const sf::Vector2f& velocity) {
   this->velocity = velocity;
 }

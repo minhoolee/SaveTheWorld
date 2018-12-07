@@ -3,10 +3,10 @@
 
 EnemyBullet::EnemyBullet() : GameObject() {}
 
-EnemyBullet::EnemyBullet(sf::Vector2f pos, ClimateGame* game)
+EnemyBullet::EnemyBullet(const sf::Vector2f& pos, ClimateGame* game)
     : GameObject(pos, game) {}
 
-void EnemyBullet::update(sf::Time timeElapsed) {
+void EnemyBullet::update(const sf::Time& timeElapsed) {
   // std::cout << velocity.x << " " << velocity.y << std::endl;
   this->sprite.move(this->velocity * timeElapsed.asSeconds());
 
@@ -26,6 +26,6 @@ sf::Vector2f EnemyBullet::getVelocity() {
   return this->velocity;
 }
 
-void EnemyBullet::setVelocity(sf::Vector2f v) {
+void EnemyBullet::setVelocity(const sf::Vector2f& v) {
   this->velocity = v;
 }

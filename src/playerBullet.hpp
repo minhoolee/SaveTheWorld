@@ -10,8 +10,8 @@ class PlayerBullet : public GameObject {
 
   PlayerBullet();
 
-  void update(sf::Time time) override;
-  void setVelocity(sf::Vector2f velocity);
+  void update(const sf::Time& timeElapsed) override;
+  void setVelocity(const sf::Vector2f& velocity);
 
  private:
   sf::Vector2f velocity;

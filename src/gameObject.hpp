@@ -8,14 +8,14 @@ class ClimateGame;
 class GameObject {
  public:
   GameObject();
-  GameObject(sf::Vector2f position, ClimateGame *game);
+  GameObject(const sf::Vector2f& position, ClimateGame *game);
 
   sf::Sprite sprite;
   ClimateGame *game;
 
   bool enabled = false;
 
-  virtual void update(sf::Time t);
+  virtual void update(const sf::Time& timeElapsed);
   virtual void enable();
   virtual void disable();
   virtual bool isEnabled();

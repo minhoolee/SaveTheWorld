@@ -10,7 +10,7 @@ class WaterBullet : public EnemyBullet {
 
   sf::Vector2f velocity;
 
-  WaterBullet(sf::Vector2f pos, ClimateGame* game);
+  WaterBullet(const sf::Vector2f& pos, ClimateGame* game);
 
  private:
   // Rectangle for taking texture off of main texture

@@ -2,12 +2,12 @@
 
 GameObject::GameObject() : GameObject::GameObject(sf::Vector2f(0, 0), NULL) {}
 
-GameObject::GameObject(sf::Vector2f position, ClimateGame* game) {
+GameObject::GameObject(const sf::Vector2f& position, ClimateGame* game) {
   this->game = game;
   this->sprite.setPosition(position);
 }
 
-void GameObject::update(sf::Time timeElapsed) {}
+void GameObject::update(const sf::Time& timeElapsed) {}
 
 bool GameObject::isColliding(GameObject* obj) {
   return (obj->enabled &&

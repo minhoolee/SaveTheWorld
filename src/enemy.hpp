@@ -11,18 +11,18 @@
 class Enemy : public GameObject {
  public:
   Enemy();
-  Enemy(sf::Vector2f position, ClimateGame* game);
+  Enemy(const sf::Vector2f& position, ClimateGame* game);
 
   std::array<EnemyBullet, 10> bullets;
 
-  void update(sf::Time t) override;
+  void update(const sf::Time& timeElapsed) override;
   void idleAnimation();
-  void attackPlayer(sf::Time& timeElapsed);
-  void moveToFormation(sf::Time& timeElapsed);
+  void attackPlayer(const sf::Time& timeElapsed);
+  void moveToFormation(const sf::Time& timeElapsed);
   // void moveSequence(sf::ConvexShape &shape, sf::Time &timeElapsed,
   // sf::Vector2f &velocity, int point_num, int select_mode, int point_total,
   // double degrees_total);
-  void moveSequence(sf::Time timeElapsed, sf::Vector2f& velocity, int point_num,
+  void moveSequence(const sf::Time& timeElapsed, sf::Vector2f& velocity, int point_num,
                     int select_mode, int point_total, double degrees_total);
   void fire();
   void disable() override;

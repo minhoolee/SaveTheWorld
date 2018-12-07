@@ -8,11 +8,11 @@ class EnemyBullet : public GameObject {
   bool enabled = false;
 
   EnemyBullet();
-  EnemyBullet(sf::Vector2f pos, ClimateGame* game);
+  EnemyBullet(const sf::Vector2f& pos, ClimateGame* game);
 
-  void update(sf::Time time) override;
+  void update(const sf::Time& timeElapsed) override;
   sf::Vector2f getVelocity();
-  void setVelocity(sf::Vector2f v);
+  void setVelocity(const sf::Vector2f& v);
 
  private:
   // Rectangle for taking texture off of main texture

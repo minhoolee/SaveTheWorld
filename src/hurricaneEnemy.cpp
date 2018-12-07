@@ -4,7 +4,7 @@
 
 const sf::IntRect Hurricane::TEXTURE_RECT = sf::IntRect(230, 12, 70, 70);
 
-Hurricane::Hurricane(sf::Vector2f position, ClimateGame* game)
+Hurricane::Hurricane(const sf::Vector2f& position, ClimateGame* game)
   : Enemy(position, game) {
   this->sprite.setTexture(game->mainTexture);
   this->sprite.setTextureRect(this->TEXTURE_RECT);

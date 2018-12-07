@@ -9,9 +9,9 @@
 class Player : public GameObject {
  public:
   Player();
-  Player(sf::Vector2f position, ClimateGame* game);
+  Player(const sf::Vector2f& position, ClimateGame* game);
 
-  void update(sf::Time t) override;
+  void update(const sf::Time& timeElapsed) override;
   void fire();
 
   // Player 1 controls : ARROW KEYS

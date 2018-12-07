@@ -6,7 +6,7 @@ const sf::IntRect Enemy::TEXTURE_RECT = sf::IntRect(0, 0, 0, 0);
 
 Enemy::Enemy() : GameObject() {}
 
-Enemy::Enemy(sf::Vector2f position, ClimateGame* game)
+Enemy::Enemy(const sf::Vector2f& position, ClimateGame* game)
   : GameObject(position, game) {
   this->sprite.setTexture(game->mainTexture);
   this->sprite.setTextureRect(this->TEXTURE_RECT);
@@ -21,9 +21,11 @@ Enemy::Enemy(sf::Vector2f position, ClimateGame* game)
   for (int i = 0; i < bullets.size(); ++i) {
     bullets[i] = EnemyBullet(position, game);
   }
+
+  moveTimer.restart();
 }
 
-void Enemy::update(sf::Time timeElapsed) {
+void Enemy::update(const sf::Time& timeElapsed) {
   for (EnemyBullet& b : this->bullets) {
     if (b.isEnabled()) {
       b.update(timeElapsed);
@@ -40,7 +42,7 @@ void Enemy::update(sf::Time timeElapsed) {
     this->hasFired = false;
   }
 
-  // First 5 seconds idly move and then attack
+  // First 7 seconds idly move and then attack
   if (moveTimer.getElapsedTime().asSeconds() < 3.0f) {
     velocity.y = 100;
     sprite.move(velocity * timeElapsed.asSeconds());
@@ -201,7 +203,7 @@ void Enemy::update(sf::Time timeElapsed) {
 }
 
 // FAILED ATTEMPT TO MOVE THEM INTO A GRID FORMATION
-void Enemy::moveToFormation(sf::Time& timeElapsed) {
+void Enemy::moveToFormation(const sf::Time& timeElapsed) {
   sf::Clock movementTimer;
 
   for (int i = 0; i < 20; i++) {
@@ -239,7 +241,7 @@ void Enemy::idleAnimation() {
   // }
 }
 
-void Enemy::attackPlayer(sf::Time& timeElapsed) {
+void Enemy::attackPlayer(const sf::Time& timeElapsed) {
   sf::Vector2f velocity(0, 0);
   double degrees = 0;
 
@@ -275,7 +277,7 @@ void Enemy::attackPlayer(sf::Time& timeElapsed) {
   }
 }
 
-void Enemy::moveSequence(sf::Time timeElapsed, sf::Vector2f& velocity,
+void Enemy::moveSequence(const sf::Time& timeElapsed, sf::Vector2f& velocity,
                          int point_num, int select_mode, int point_total,
                          double degrees_total) {
   // Range of theta (degrees) is 0 <= theta < 360

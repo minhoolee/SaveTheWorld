@@ -5,7 +5,6 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/String.hpp>
 #include <iostream>
-#include <thread>
 #include <array>
 
 #include "backgroundParticles.hpp"
@@ -49,13 +48,15 @@ class ClimateGame {
 
   ClimateGame();
 
+  void init();
   void run();
-  void update(sf::Time time);
+  void update(const sf::Time& timeElapsed);
   void processEvents();
   void render();
 
   void spawnEnemies();
-  static bool isInBlastZone(sf::Vector2f pos);
+  static bool isInBlastZone(const sf::Vector2f& pos);
+  static std::string stringFromFile(const std::string& filename);
 
  private:
   // Blast zone (invisible border) of constant width around screen
@@ -63,8 +64,9 @@ class ClimateGame {
 
   sf::Font font;
 
-  sf::Text helpText;
-  sf::Text titleText;
+  sf::Text introText, helpText, titleText;
+
+  bool intro = true;
 
   // Background texture
   sf::Sprite backgroundSprite;

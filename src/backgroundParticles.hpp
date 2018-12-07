@@ -11,7 +11,7 @@ class BackgroundParticles {
   void animateParticlesIdle();
   void animateParticlesMovement();
 
-  std::array<sf::CircleShape, 30> backgroundParticles;
+  std::array<sf::CircleShape, 50> backgroundParticles;
 
  private:
   int num_particles;

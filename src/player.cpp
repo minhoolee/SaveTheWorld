@@ -3,7 +3,7 @@
 
 Player::Player() : GameObject() {}
 
-Player::Player(sf::Vector2f position, ClimateGame* game)
+Player::Player(const sf::Vector2f& position, ClimateGame* game)
   : GameObject(position, game) {
   enabled = true;
 
@@ -21,10 +21,7 @@ Player::Player(sf::Vector2f position, ClimateGame* game)
                          (double)this->playerTextureRect.height * prop / 2);
 }
 
-void Player::update(sf::Time timeElapsed) {
-  // Image starts pointed left, so rotate it 90 degrees clockwise
-  // this->sprite.setRotation(90);
-
+void Player::update(const sf::Time& timeElapsed) {
   sf::Vector2f playerMovement(0, 0);
 
   if (this->isPlayerMovingUp) {
@@ -42,19 +39,6 @@ void Player::update(sf::Time timeElapsed) {
   if (this->isPlayerMovingRight) {
     playerMovement.x += PLAYER_SPEED;
   }
-
-  /*
-  // Disable if outside of walls
-  if ( (this->sprite.getPosition().x > 32) && (this->sprite.getPosition().x <
-  game->GAME_WIDTH - 32) )
-  {
-          if ( (this->sprite.getPosition().y > 32) &&
-  (this->sprite.getPosition().y < game->GAME_HEIGHT - 32) )
-          {
-                  //TODO : FIGURE THIS OUT
-          }
-  }
-  */
 
   this->sprite.move(playerMovement * timeElapsed.asSeconds());
 

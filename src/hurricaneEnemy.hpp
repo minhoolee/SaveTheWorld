@@ -5,7 +5,7 @@
 
 class Hurricane : public Enemy {
  public:
-  Hurricane(sf::Vector2f position, ClimateGame *game);
+  Hurricane(const sf::Vector2f& position, ClimateGame *game);
 
  private:
   // Rectangle for taking textures off of main texture

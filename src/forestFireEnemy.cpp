@@ -4,7 +4,7 @@
 
 const sf::IntRect ForestFire::TEXTURE_RECT = sf::IntRect(154, 12, 75, 68);
 
-ForestFire::ForestFire(sf::Vector2f position, ClimateGame* game)
+ForestFire::ForestFire(const sf::Vector2f& position, ClimateGame* game)
   : Enemy(position, game) {
   this->sprite.setTexture(game->mainTexture);
   this->sprite.setTextureRect(this->TEXTURE_RECT);

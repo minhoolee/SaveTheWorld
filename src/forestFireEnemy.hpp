@@ -6,7 +6,7 @@
 
 class ForestFire : public Enemy {
  public:
-  ForestFire(sf::Vector2f position, ClimateGame* game);
+  ForestFire(const sf::Vector2f& position, ClimateGame* game);
 
  private:
   // Rectangle for taking textures off of main texture
