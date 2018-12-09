@@ -4,8 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/String.hpp>
-#include <iostream>
 #include <array>
+#include <iostream>
 
 #include "backgroundParticles.hpp"
 #include "enemy.hpp"
@@ -48,11 +48,14 @@ class ClimateGame {
 
   ClimateGame();
 
-  void init();
+  void initTexts();
   void run();
   void update(const sf::Time& timeElapsed);
   void processEvents();
   void render();
+  void displayEnding();
+  void centerJustify(sf::Text& text);
+  void waitForKeyPress(sf::RenderWindow& window, sf::Keyboard::Key keyCode);
 
   void spawnEnemies();
   static bool isInBlastZone(const sf::Vector2f& pos);
@@ -64,9 +67,9 @@ class ClimateGame {
 
   sf::Font font;
 
-  sf::Text introText, helpText, titleText;
+  sf::Text introText, helpText, titleText, endText, restartText;
 
-  bool intro = true;
+  enum class gameMode { INTRODUCTION, PLAYING, OVER } gameState;
 
   // Background texture
   sf::Sprite backgroundSprite;

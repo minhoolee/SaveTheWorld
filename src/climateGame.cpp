@@ -5,8 +5,8 @@
 #include "climateGame.hpp"
 
 ClimateGame::ClimateGame()
-  : window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Climate 2.0"),
-    particle(BackgroundParticles(30)) {
+    : window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Climate 2.0"),
+      particle(BackgroundParticles(30)) {
   window.setFramerateLimit(60);
 
   backgroundTexture.loadFromFile("Textures/black_background.png");
@@ -20,19 +20,22 @@ ClimateGame::ClimateGame()
   player =
       Player(sf::Vector2f((SCREEN_WIDTH / 2), (SCREEN_HEIGHT * 7 / 8)), this);
 
+  initTexts();
+
+  gameState = gameMode::INTRODUCTION;
+}
+
+void ClimateGame::initTexts() {
   font.loadFromFile("Fonts/galaga_fonts.ttf");
 
   introText.setString(ClimateGame::stringFromFile("txt/intro"));
   introText.setFillColor(sf::Color::White);
   introText.setFont(font);
   introText.setCharacterSize(20);
-  introText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f));
-  sf::FloatRect textRect = introText.getLocalBounds();
-  introText.setOrigin(textRect.left + textRect.width / 2.0f,
-                      textRect.top + textRect.height / 2.0f);
-}
+  introText.setPosition(
+      sf::Vector2f(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f));
+  ClimateGame::centerJustify(introText);
 
-void ClimateGame::init() {
   // Show player's score
   playerScoreText.setPosition(50, 30);
   playerScoreText.setFillColor(sf::Color::White);
@@ -44,9 +47,8 @@ void ClimateGame::init() {
   helpText.setFillColor(sf::Color::White);
   helpText.setFont(font);
   helpText.setCharacterSize(12);
-  helpText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 60));
-  sf::FloatRect textRect = helpText.getLocalBounds();
-  helpText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top);
+  helpText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 100));
+  ClimateGame::centerJustify(helpText);
 
   // Create title text
   titleText.setString("SAVE THE WORLD");
@@ -54,9 +56,19 @@ void ClimateGame::init() {
   titleText.setFont(font);
   titleText.setCharacterSize(24);
   titleText.setPosition(helpText.getPosition().x,
-                        helpText.getPosition().y - 30);
-  textRect = titleText.getLocalBounds();
-  titleText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top);
+                        helpText.getPosition().y - 50);
+  ClimateGame::centerJustify(titleText);
+
+  endText.setFillColor(sf::Color::White);
+  endText.setFont(font);
+  endText.setCharacterSize(20);
+  endText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f));
+}
+
+void ClimateGame::centerJustify(sf::Text& text) {
+  sf::FloatRect textRect = text.getLocalBounds();
+  text.setOrigin(textRect.left + textRect.width / 2.0f,
+                 textRect.top + textRect.height / 2.0f);
 }
 
 void ClimateGame::run() {
@@ -67,21 +79,9 @@ void ClimateGame::run() {
   sf::Event event;
 
   // Wait to begin game until user presses space key
-  while (true) {
-    window.pollEvent(event);
+  waitForKeyPress(window, sf::Keyboard::Space);
 
-    if (event.type == sf::Event::KeyPressed) {
-      if (event.key.code == sf::Keyboard::Space) {
-        intro = false;
-        break;
-      }
-    }
-
-    render();
-    sf::sleep(sf::seconds(0.5f));
-  }
-
-  init();
+  gameState = gameMode::PLAYING;
 
   // Start some game elements on startup
   spawnEnemies();
@@ -97,6 +97,58 @@ void ClimateGame::run() {
     update(timeSinceLastUpdate);
 
     render();  // Draw all the game objects, textures, and fonts
+
+    if (gameState == gameMode::OVER) displayEnding();
+  }
+}
+
+void ClimateGame::displayEnding() {
+  // restart -> explanation
+  // waitForKeyPress(window, sf::Keyboard::Space);
+
+  // Show closing statement
+  endText.setString(ClimateGame::stringFromFile("txt/closing"));
+  ClimateGame::centerJustify(endText);
+
+  waitForKeyPress(window, sf::Keyboard::Space);
+
+  // Show problems
+  endText.setString(ClimateGame::stringFromFile("txt/problems"));
+  ClimateGame::centerJustify(endText);
+
+  waitForKeyPress(window, sf::Keyboard::Space);
+
+  // Show solutions
+  endText.setString(ClimateGame::stringFromFile("txt/compost"));
+  ClimateGame::centerJustify(endText);
+
+  waitForKeyPress(window, sf::Keyboard::Space);
+
+  endText.setString(ClimateGame::stringFromFile("txt/diet"));
+  ClimateGame::centerJustify(endText);
+
+  waitForKeyPress(window, sf::Keyboard::Space);
+
+  endText.setString(ClimateGame::stringFromFile("txt/unplug"));
+  ClimateGame::centerJustify(endText);
+
+  waitForKeyPress(window, sf::Keyboard::Q);
+}
+
+void ClimateGame::waitForKeyPress(sf::RenderWindow& window, sf::Keyboard::Key keyCode) {
+  sf::Event event;
+
+  while (true) {
+    window.pollEvent(event);
+
+    if (event.type == sf::Event::KeyPressed) {
+      if (event.key.code == keyCode) {
+        return;
+      }
+    }
+
+    render();
+    sf::sleep(sf::seconds(0.5f));
   }
 }
 
@@ -199,7 +251,16 @@ void ClimateGame::render() {
   window.clear();
   window.draw(backgroundSprite);
 
-  if (player.isEnabled()) {
+  // Draw all background particles
+  for (sf::CircleShape& p : particle.backgroundParticles) {
+    window.draw(p);
+  }
+
+  if (!player.isEnabled()) {
+    gameState = gameMode::OVER;
+  }
+
+  if (gameState == gameMode::PLAYING) {
     window.draw(player.sprite);
 
     for (PlayerBullet& b : playerBullets) {
@@ -222,26 +283,25 @@ void ClimateGame::render() {
     }
   }
 
-  // Draw all background particles
-  for (sf::CircleShape& p : particle.backgroundParticles) {
-    window.draw(p);
-  }
-
-  if (intro) {
+  // Show text depending on state of game
+  if (gameState == gameMode::INTRODUCTION) {
     window.draw(introText);
+  } else if (gameState == gameMode::PLAYING) {
+    window.draw(playerScoreText);
+    window.draw(titleText);
+    window.draw(helpText);
+  } else if (gameState == gameMode::OVER) {
+    window.draw(endText);
   }
 
-  window.draw(playerScoreText);
-  window.draw(helpText);
-  window.draw(titleText);
   window.display();
 }
 
 void ClimateGame::spawnEnemies() {
   // First half (hurricanes)
   int START_POS = 300;
-  int spacing =
-      (double)(ClimateGame::SCREEN_WIDTH - 2 * START_POS) / (enemies.size() / 2 - 1);
+  int spacing = (double)(ClimateGame::SCREEN_WIDTH - 2 * START_POS) /
+                (enemies.size() / 2 - 1);
 
   for (int i = 0; i < enemies.size() / 2; ++i) {
     enemies[i] = Hurricane(sf::Vector2f(START_POS + (i * spacing), -150), this);
@@ -252,8 +312,8 @@ void ClimateGame::spawnEnemies() {
   // Second half (forest fires)
   for (int i = enemies.size() / 2; i < enemies.size(); ++i) {
     enemies[i] = ForestFire(
-                     sf::Vector2f(START_POS + ((i - enemies.size() / 2) * spacing), -50),
-                     this);
+        sf::Vector2f(START_POS + ((i - enemies.size() / 2) * spacing), -50),
+        this);
     enemies[i].enable();
     enemiesLeft++;
   }
