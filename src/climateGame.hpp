@@ -50,6 +50,8 @@ class ClimateGame {
 
   void initTexts();
   void run();
+  void win();
+  void lose();
   void update(const sf::Time& timeElapsed);
   void processEvents();
   void render();
@@ -65,9 +67,11 @@ class ClimateGame {
   // Blast zone (invisible border) of constant width around screen
   static const int BLAST_ZONE = 200;
 
-  sf::Font font;
+  // Maximum 60 seconds of game play
+  static const int MAX_TIME = 60;
 
-  sf::Text introText, helpText, titleText, endText, restartText;
+  sf::Font font;
+  sf::Text introText, helpText, titleText, timeText, endText, restartText;
 
   enum class gameMode { INTRODUCTION, PLAYING, OVER } gameState;
 

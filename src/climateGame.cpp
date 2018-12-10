@@ -47,7 +47,7 @@ void ClimateGame::initTexts() {
   helpText.setFillColor(sf::Color::White);
   helpText.setFont(font);
   helpText.setCharacterSize(12);
-  helpText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 100));
+  helpText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 200));
   ClimateGame::centerJustify(helpText);
 
   // Create title text
@@ -56,13 +56,18 @@ void ClimateGame::initTexts() {
   titleText.setFont(font);
   titleText.setCharacterSize(24);
   titleText.setPosition(helpText.getPosition().x,
-                        helpText.getPosition().y - 50);
+                        helpText.getPosition().y - 60);
   ClimateGame::centerJustify(titleText);
 
   endText.setFillColor(sf::Color::White);
   endText.setFont(font);
   endText.setCharacterSize(20);
   endText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f));
+
+  timeText.setFillColor(sf::Color::White);
+  timeText.setFont(font);
+  timeText.setCharacterSize(20);
+  timeText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 50));
 }
 
 void ClimateGame::centerJustify(sf::Text& text) {
@@ -87,9 +92,22 @@ void ClimateGame::run() {
   spawnEnemies();
 
   sf::Time timeSinceLastUpdate = sf::Time::Zero;
+  int timeRemaining = ClimateGame::MAX_TIME;
   clock.restart();
 
+  sf::Clock gameTimer;
+
   while (window.isOpen()) {
+    // Update time remaining
+    timeRemaining = static_cast<int>(ClimateGame::MAX_TIME -
+                                     gameTimer.getElapsedTime().asSeconds());
+    // Lose game if time runs out
+    if (timeRemaining <= 0) this->lose();
+
+    timeText.setString(std::to_string(timeRemaining));
+    ClimateGame::centerJustify(timeText);
+
+    // Update player score
     playerScoreText.setString(std::to_string(playerScore));
 
     processEvents();
@@ -102,16 +120,28 @@ void ClimateGame::run() {
   }
 }
 
-void ClimateGame::displayEnding() {
-  // restart -> explanation
-  // waitForKeyPress(window, sf::Keyboard::Space);
-
-  // Show closing statement
-  endText.setString(ClimateGame::stringFromFile("txt/closing"));
+void ClimateGame::win() {
+  this->endText.setString(
+      "Great work! You successfully defended Earth from its invaders.\n\n" +
+      stringFromFile("txt/closing"));
   ClimateGame::centerJustify(endText);
+  gameState = gameMode::OVER;
 
   waitForKeyPress(window, sf::Keyboard::Space);
+}
 
+void ClimateGame::lose() {
+  this->endText.setString(
+      "     Unfortunately, you lost and you cannot restart.\
+     \n    Once the damage is done, it'll exist for centuries.\n\n" +
+      stringFromFile("txt/closing"));
+  ClimateGame::centerJustify(endText);
+  gameState = gameMode::OVER;
+
+  waitForKeyPress(window, sf::Keyboard::Space);
+}
+
+void ClimateGame::displayEnding() {
   // Show problems
   endText.setString(ClimateGame::stringFromFile("txt/problems"));
   ClimateGame::centerJustify(endText);
@@ -133,9 +163,13 @@ void ClimateGame::displayEnding() {
   ClimateGame::centerJustify(endText);
 
   waitForKeyPress(window, sf::Keyboard::Q);
+
+  // Exit program
+  exit(0);
 }
 
-void ClimateGame::waitForKeyPress(sf::RenderWindow& window, sf::Keyboard::Key keyCode) {
+void ClimateGame::waitForKeyPress(sf::RenderWindow& window,
+                                  sf::Keyboard::Key keyCode) {
   sf::Event event;
 
   while (true) {
@@ -288,6 +322,7 @@ void ClimateGame::render() {
     window.draw(introText);
   } else if (gameState == gameMode::PLAYING) {
     window.draw(playerScoreText);
+    window.draw(timeText);
     window.draw(titleText);
     window.draw(helpText);
   } else if (gameState == gameMode::OVER) {
