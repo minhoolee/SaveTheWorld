@@ -73,6 +73,10 @@ class ClimateGame {
   sf::Font font;
   sf::Text introText, helpText, titleText, timeText, endText, restartText;
 
+  // Key for user to understand the meaning of the bullet colors
+  sf::Sprite key;
+  static const sf::IntRect KEY_RECT;
+
   enum class gameMode { INTRODUCTION, PLAYING, OVER } gameState;
 
   // Background texture

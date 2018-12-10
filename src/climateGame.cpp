@@ -4,6 +4,8 @@
 
 #include "climateGame.hpp"
 
+const sf::IntRect ClimateGame::KEY_RECT = sf::IntRect(131, 86, 100, 50);
+
 ClimateGame::ClimateGame()
     : window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Climate 2.0"),
       particle(BackgroundParticles(30)) {
@@ -68,6 +70,13 @@ void ClimateGame::initTexts() {
   timeText.setFont(font);
   timeText.setCharacterSize(20);
   timeText.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 50));
+
+  // Create and position key for bullets
+  this->key.setTexture(this->mainTexture);
+  this->key.setTextureRect(this->KEY_RECT);
+
+  this->key.setPosition(sf::Vector2f(SCREEN_WIDTH - 50, 30));
+
 }
 
 void ClimateGame::centerJustify(sf::Text& text) {
@@ -101,8 +110,8 @@ void ClimateGame::run() {
     // Update time remaining
     timeRemaining = static_cast<int>(ClimateGame::MAX_TIME -
                                      gameTimer.getElapsedTime().asSeconds());
-    // Lose game if time runs out
-    if (timeRemaining <= 0) this->lose();
+    // Win game if you last until the end
+    if (timeRemaining <= 0) this->win();
 
     timeText.setString(std::to_string(timeRemaining));
     ClimateGame::centerJustify(timeText);
@@ -321,6 +330,7 @@ void ClimateGame::render() {
   if (gameState == gameMode::INTRODUCTION) {
     window.draw(introText);
   } else if (gameState == gameMode::PLAYING) {
+    window.draw(key);
     window.draw(playerScoreText);
     window.draw(timeText);
     window.draw(titleText);
