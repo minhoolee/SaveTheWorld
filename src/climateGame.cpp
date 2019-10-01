@@ -191,7 +191,7 @@ void ClimateGame::waitForKeyPress(sf::RenderWindow& window,
     }
 
     render();
-    sf::sleep(sf::seconds(0.5f));
+    sf::sleep(sf::seconds(0.10f));
   }
 }
 

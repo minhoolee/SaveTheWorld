@@ -5,7 +5,7 @@ filegroup(
   ]),
 )
 cc_library(
-  name = "galaga-lib",
+  name = "save-the-world-lib",
   srcs = glob(["**/*.cpp"]),
   hdrs = glob(["**/*.hpp"]),
   visibility = ["//:__pkg__"],

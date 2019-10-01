@@ -1,7 +1,7 @@
 cc_binary(
-  name = "galaga-main",
+  name = "save-the-world-main",
   deps = [
-    "//src:galaga-lib",
+    "//src:save-the-world-lib",
   ],
   linkopts = [
     "-L/usr/local/lib",
